@@ -7,18 +7,46 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * MeanFilterParallel class applys mean filer on an image using Fork/Join Framework
+ * MeanFilterParallel class applies filer on an image using Fork/Join Framework, i.e. Parallel programming with concurrency
+ * using Divide and Conqueror approach
  * @author Shaun Mbolompo 2022/08/06
  * 
  */
 
+
 public class MeanFilterParallel{ 
+
+
+    // Declare the variable static so it can be used by the static methods and also that it may be for used by all classes of MeanFilterParallel without 
+    // will be the same for the instances of the class, meaning can be shared by all the instances of the class declared in
+    static long startTime = 0; 
+
+    /**
+    * Method to start the timing of how low the system takes to do the mean filter using parallelism and concurrency
+    * it initializes the static variable startTime when called
+    */
+    private static void tick(){
+         startTime = System.currentTimeMillis();
+    }
+ 
+    /**
+    * Method toc to return the time taken by the program to execute
+    * @return the time it takes the program using the available processors to apply the mean filter on an image
+    */
+    private static float toc(){
+         return (System.currentTimeMillis()-startTime)/1000.0f;
+    }
+
 
     /**
      * Drive class to run other classes
      * @param args receives arguments from the terminal and for the this task it takes in three arguments
      */
     public static void main(String[] args) {
+
+    // start timing when the driver method is called
+    tick();
+
    // The ForkJoinPool to fork a pool of threads to run the lists of tasks using the available processes
    ForkJoinPool pool = new ForkJoinPool();
 
@@ -66,8 +94,8 @@ public class MeanFilterParallel{
        // Get the number of processes used by the computer and store them on the variable cut
        int cut = height1/Runtime.getRuntime().availableProcessors()-1;
              
-       // Create an object of Median
-       Median obj = new Median(windowWidth, width1,height1, 0, height1, cut, originalImg, filteredImg);
+       // Create an object of Mean
+       Mean obj = new Mean(windowWidth, width1,height1, 0, height1, cut, originalImg, filteredImg);
    
        // Use the object to run the tasks throught the pool of threads
        pool.invoke(obj);
@@ -75,7 +103,10 @@ public class MeanFilterParallel{
        // Once the threads are finish filtering the image the we call the method last compute to write the results to the image called output
        obj.lastCompute();
 
-       
+       // call the toc method to return the time taken to execute the program and store the value on the variable time
+       float time = toc();
+
+       System.out.println("Mean filter run time using fork/join framework in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1);
    
    }else{
        System.out.println("The window width must be an odd, positive integer >=3."); // Alert the user of the window size accepted

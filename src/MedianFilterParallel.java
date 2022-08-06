@@ -9,18 +9,43 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 /**
- * MedianFilterParallel class applys median filer on an image using Fork/Join Framework
+ * MedianFilterParallel class applies median filer on an image using Fork/Join Framework, i.e. Parallel programming with concurrency
+ * using Divide and Conqueror approach
  * @author Shaun Mbolompo 2022/08/06
  * 
  */
 
 public class MedianFilterParallel{ 
 
+
+ // Declare the variable static so it can be used by the static methods and also that it may be for used by all classes of MedianFilterParallel without 
+ // will be the same for the instances of the class, meaning can be shared by all the instances of the class declared in
+ static long startTime = 0; 
+
+/**
+ * Method to start the timing of how low the system takes to do the median filter using parallelism and concurrency
+ * it initializes the static variable startTime when called
+ */
+private static void tick(){
+    startTime = System.currentTimeMillis();
+}
+
+/**
+ * Method toc to return the time taken by the program to execute
+ * @return the time it takes the program using the available processors to apply the median filter on an image
+ */
+private static float toc(){
+    return (System.currentTimeMillis()-startTime)/1000.0f ;
+}
+
 /**
  * Drive class to run other classes
  * @param args receives arguments from the terminal and for the this task it takes in three arguments
  */
 public static void main(String[] args) {
+
+    // start timing when the driver method is called
+    tick(); 
 
     // The ForkJoinPool to fork a pool of threads to run the lists of tasks using the available processes
     ForkJoinPool pool = new ForkJoinPool();
@@ -46,7 +71,7 @@ public static void main(String[] args) {
     // This statement ensures the window size entered on the console is either greater than 3 and is an odd number
     if(windowWidth>=3&&windowWidth%2!=0){
 
-        Runtime run = Runtime.getRuntime();
+    
 
         // Initialize the images through the Buffered class to null
         BufferedImage originalImg = null;
@@ -77,7 +102,11 @@ public static void main(String[] args) {
         
         // Once the threads are finish filtering the image the we call the method last compute to write the results to the image called output
         obj.lastCompute();
+         
+        // call the toc method to return the time taken to execute the program and store the value on the variable time
+        float time = toc();
 
+        System.out.println("Median filter run time using fork/join framework in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1);
         
     
     }else{
@@ -143,7 +172,7 @@ public static void main(String[] args) {
         int midGreen = 0;
         int midBlue = 0;
 
-        // Start the row of the image to be processed at the given height and keep both the width and height of the window to the window size whenever it moves across the image
+        // THe start of the row of the image pixel to be processed at the given height and keep both the width and height of the window to the window size whenever it moves across the image
         int row = heightStart;
         int col = 0;
         int row2 = heightStart + winWidth;
@@ -229,7 +258,8 @@ public static void main(String[] args) {
         // When the cut off is not yet reached the program divide the tasks to smaller tasks to be processed. The divide and conqueror algorithm
         }
         }else{
-            int split = (heightStart+heightEnd)/2;
+            int split = (heightStart+heightEnd)/2; // halfs the height size of the image
+
             Median left = new Median(winWidth, widt, height, heightStart, split,cutPoint,originalImage,filteredImage);
             Median right = new Median(winWidth, widt, height, split, heightEnd,cutPoint,originalImage,filteredImage);
             left.fork();
