@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"<Unnamed>","l":"MeanFilterParallel.Mean"},{"p":"<Unnamed>","l":"MeanFilterParallel"},{"p":"<Unnamed>","l":"MeanFilterSerial"},{"p":"<Unnamed>","l":"MedianFilterParallel.Median"},{"p":"<Unnamed>","l":"MedianFilterParallel"},{"p":"<Unnamed>","l":"MedianFilterSerial"}];updateSearchResults();
