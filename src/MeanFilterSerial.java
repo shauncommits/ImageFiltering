@@ -5,6 +5,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class MeanFilterSerial{
+
+    /**
+     * Drive class to run other classes
+     * @param args receives arguments from the terminal and for the this task it takes in three arguments
+     */
     public static void main(String[] args) {
         String inputImageName = "";
         String outputImageName = "";
@@ -32,15 +37,14 @@ public class MeanFilterSerial{
                 file2 = new File("image/"+outputImageName);
                 
                 originalImage = ImageIO.read(file);
+                filteredImage = ImageIO.read(file2);
                 int width1 = originalImage.getWidth()-windowWidth;
                 int height1 = originalImage.getHeight()-windowWidth;
                 int sub = windowWidth/2;
-                System.out.println("Width "+width1);
-                System.out.println("height "+height1);
                 int pixel1 = 0;
                 int wProduct = windowWidth*windowWidth;
 
-                filteredImage = ImageIO.read(file2);
+                
                
                 int sumRed = 0;
                 int sumGreen = 0;

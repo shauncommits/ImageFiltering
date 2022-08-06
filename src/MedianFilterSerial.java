@@ -1,13 +1,19 @@
 import java.awt.image.BufferedImage;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 import javax.imageio.ImageIO;
 
 public class MedianFilterSerial{
+
+    /**
+     * Drive class to run other classes
+     * @param args receives arguments from the terminal and for the this task it takes in three arguments
+     */
     public static void main(String[] args) {
         String inputImageName = "";
         String outputImageName = "";
@@ -25,47 +31,91 @@ public class MedianFilterSerial{
         }
         BufferedImage originalImage = null;
         BufferedImage filteredImage = null;
+        Color color = null;
+        Color newColor = null;
         File file  = null;
         File file2 = null;
         if(windowWidth>=3&&windowWidth%2!=0){
             try{
-                file = new File("image/"+inputImageName); ///home/shaun/AssignmentPCP1/image/img1.jpg
+                file = new File("image/"+inputImageName); 
                 file2 = new File("image/"+outputImageName);
                 
                 originalImage = ImageIO.read(file);
-                int width1 = originalImage.getWidth();
-                int height1 = originalImage.getHeight();
-                int pixel1 = 0;
-
                 filteredImage = ImageIO.read(file2);
-                int width2 = filteredImage.getWidth();
-                int height2 = filteredImage.getHeight();
-                int pixel2 = 0;
-                
-                int count = 0;
 
-                HashMap<Integer,ArrayList<Integer>> map = new HashMap<>();
-                ArrayList<Integer> list = new ArrayList<>();
+                int width1 = originalImage.getWidth()-windowWidth;
+                int height1 = originalImage.getHeight()-windowWidth;
+                int sub = windowWidth/2;
+                int pixel1 = 0;
+               
+                int midRed = 0;
+                int midGreen = 0;
+                int midBlue = 0;
+
                 int row = 0;
                 int col = 0;
                 int row2 = windowWidth;
                 int col2 = windowWidth;
+                List<Integer> arrRed = new ArrayList<>();
+                List<Integer> arrGreen = new ArrayList<>();
+                List<Integer> arrBlue = new ArrayList<>();
 
-                while(row<height1){
+                while(row2<=height1){
                 for(int i=row;i<row2;i++){
                     for(int j=col;j<col2;j++){
-                        pixel1 = originalImage.getRGB(i, j);
-                        //list.add(pixel1);
+                        pixel1 = originalImage.getRGB(j,i);
+                        color = new Color(pixel1);
+                        arrRed.add(color.getRed());
+                        arrGreen.add(color.getGreen());
+                        arrBlue.add(color.getBlue());
                     }
-                    map.put(i, list);
                 }
-                if(col2>windowWidth){
+                Collections.sort(arrRed);
+                Collections.sort(arrGreen);
+                Collections.sort(arrBlue);
+
+                int minR = arrRed.size()/2;
+                int minB = arrBlue.size()/2;
+                int minG = arrGreen.size()/2;
+
+                if(arrRed.size()%2!=0){
+                    midRed = arrRed.get(minR);
+                }
+                else{
+                    midRed = (arrRed.get(minR-1)+arrRed.get(minR))/2;
+                }
+
+                if(arrGreen.size()%2!=0){
+                    midGreen = arrGreen.get(minG);
+                }
+                else{
+                    midGreen = (arrGreen.get(minG-1)+arrGreen.get(minG))/2;
+                }
+
+                if(arrBlue.size()%2!=0){
+                    midBlue = arrBlue.get(minB);
+                }
+                else{
+                    midBlue = (arrBlue.get(minB-1)+arrBlue.get(minB))/2;
+                }
+
+                newColor = new Color(midRed, midGreen, midBlue);
+                
+                filteredImage.setRGB(col2-sub, row2-sub, newColor.getRGB());
+                arrRed.clear();
+                arrGreen.clear();
+                arrBlue.clear();
+                
+                
+                if(col2>width1){
                 col = 0; col2 = windowWidth;
                 row++; row2++;
                 }else{
                     col++; col2++;
                 }
             }
+            File outputFile = new File("image/output.jpg");
+            ImageIO.write(filteredImage, "jpg", outputFile);
                 
             }
             catch(IOException e){
