@@ -13,3 +13,18 @@ default: $(CLASS_FILES)
 
 clean:
 	rm $(BINDIR)/*.class
+
+run-MedianFilterSerial: $(CLASS_FILES)
+	@java -cp bin MedianFilterSerial $(ARGS)
+
+run-MedianFilterParallel: $(CLASS_FILES)
+	@java -cp bin MedianFilterParallel $(ARGS)
+
+run-MeanFilterSerial: $(CLASS_FILES)
+	@java -cp bin MeanFilterSerial $(ARGS)
+
+run-MeanFilterParallel: $(CLASS_FILES)
+	@java -cp bin MeanFilterParallel $(ARGS)
+
+generate-Java-Doc:
+	javadoc -d doc src/*.java
