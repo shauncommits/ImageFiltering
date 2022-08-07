@@ -12,8 +12,6 @@ import javax.imageio.ImageIO;
  * @author Shaun Mbolompo 2022/08/06
  * 
  */
-
-
 public class MeanFilterParallel{ 
 
 
@@ -21,18 +19,18 @@ public class MeanFilterParallel{
     // will be the same for the instances of the class, meaning can be shared by all the instances of the class declared in
     static long startTime = 0; 
 
-    /**
-    * Method to start the timing of how low the system takes to do the mean filter using parallelism and concurrency
-    * it initializes the static variable startTime when called
-    */
+    
+    // Method to start the timing of how low the system takes to do the mean filter using parallelism and concurrency
+    // it initializes the static variable startTime when called
+    
     private static void tick(){
          startTime = System.currentTimeMillis();
     }
  
-    /**
-    * Method toc to return the time taken by the program to execute
-    * @return the time it takes the program using the available processors to apply the mean filter on an image
-    */
+    
+    // Method toc to return the time taken by the program to execute
+    // return the time it takes the program using the available processors to apply the mean filter on an image
+    
     private static float toc(){
          return (System.currentTimeMillis()-startTime)/1000.0f;
     }
@@ -94,8 +92,10 @@ public class MeanFilterParallel{
        // Get the number of processes used by the computer and store them on the variable cut
        int cut = height1/Runtime.getRuntime().availableProcessors()-1;
              
-       // Create an object of Mean
-       Mean obj = new Mean(windowWidth, width1,height1, 0, height1, cut, originalImg, filteredImg);
+       
+       // Create an object of the inner class Mean
+       MeanFilterParallel ob = new MeanFilterParallel();
+       MeanFilterParallel.Mean obj = ob.new Mean(windowWidth, width1,height1, 0, height1, cut, originalImg, filteredImg);
    
        // Use the object to run the tasks throught the pool of threads
        pool.invoke(obj);
@@ -106,134 +106,181 @@ public class MeanFilterParallel{
        // call the toc method to return the time taken to execute the program and store the value on the variable time
        float time = toc();
 
-       System.out.println("Mean filter run time using fork/join framework in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1);
+       System.out.println("Mean filter run time using fork/join framework in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1+ " using a "+windowWidth+"x"+windowWidth+" size");
    
    }else{
        System.out.println("The window width must be an odd, positive integer >=3."); // Alert the user of the window size accepted
    }
    }
-}
+
    /**
     * A RecursiveAction class to break tasks into smaller task and compute the tasks in parallel
     */
-   class Mean extends RecursiveAction{
+    public class Mean extends RecursiveAction{
     
-    // Attributes of the class
-    File outputFile = new File("image/output.jpg");
-    int winWidth;
-    int heightStart;
-    int heightEnd;
-    int height;
-    int widt;
-    BufferedImage filteredImage;
-    BufferedImage originalImage;
-    int cutPoint;
-    int halfWidth = winWidth/2;
-
-     /**
-     * The class Constructor to initialize the attributes of the class
-     * @param width is the width of the window used to get the pixel components
-     * @param w is the actual width of the image being processed for filtering
-     * @param h is the actual height of the image to be processed
-     * @param hStart depics the the start of the image  height to be processed
-     * @param hEnd depics the end of the image height to be processed
-     * @param cut is the cut off value that determines the leght of the difference of the start and end length to be processed
-     * @param ori is the origial image 
-     * @param fil the image used to produce a filter from
+    /**
+     * Image name and path to be used as output to transfer the filter of the original image too
      */
-    Mean(int width, int w, int h, int hStart, int hEnd, int cut, BufferedImage ori,BufferedImage fil){
-        winWidth = width;
-        heightStart = hStart;
-        heightEnd = hEnd;
-        widt = w;
-        originalImage = ori;
-        filteredImage = fil;
-        cutPoint = cut;
-    }
+     File outputFile = new File("image/output.jpg");
+    /**
+     * the width of the sliding window  
+     */ 
+    int winWidth;
 
     /**
-     * Compute method to run the tasks
+     * the start point on the image height
      */
-    protected void compute(){
-        
-        // Checks the cuff off value for the processing of the image to take place
-        if(heightEnd-heightStart<cutPoint){
-        
-        // Initialize the variable of type Color to null to be used to both extract and put colors from the original image to the image used to produce a filter
-        Color color = null;
-        Color newColor = null;
+    int heightStart;
+    /**
+     * the ending point on the image height
+     */
+    int heightEnd;
 
-        // Get the number of pixels in a sliding-window
-        int wProduct = winWidth*winWidth;
+    /** 
+     * the height of the image
+     */
+    int height;
 
-        // Use this value to position the co-ordinates of the median pixel to be set on the image to filtered
-        int sub = winWidth/2;
-        
-        // Initialize pixel and the sum of the component number colours to zero
-        int pixel1 = 0;
-        int sumRed = 0;
-        int sumGreen = 0;
-        int sumBlue = 0;
+    /**
+     *  the width of the image
+     */ 
+    int widt;
 
-        // Start the row of the image to be processed at the given height and keep both the width and height of the window to the window size whenever it moves across the image
-        int row = heightStart;
-        int col = 0;
-        int row2 = heightStart + winWidth;
-        int col2 = winWidth;
+    /** 
+     * image to be flitered
+     */ 
+    BufferedImage filteredImage;
 
-        // The while loop set as a bench mark to loop across the height of the image until the variable row is equal or greater than the set end of the image height to be processed
-        while(row2<=heightEnd){
+    /** 
+     * the original image
+     */
+    BufferedImage originalImage;
+    /** 
+     * cut point for computation
+     */
+    int cutPoint;
 
-            // The two loops are used to slide the window on the image horizontal and vetically 
-            // And from each window add sum individual number of the pixel components in order to late compute the average of each of those components
-            for(int i=row;i<row2;i++){
-                for(int j=col;j<col2;j++){
-                    pixel1 = originalImage.getRGB(j,i);                    
-                    color = new Color(pixel1);
-                    sumRed = sumRed + color.getRed();
-                    sumGreen = sumGreen + color.getGreen();
-                    sumBlue = sumBlue + color.getBlue();
-                }
-            }
-              
-            // Put the number representing those colours in the constructor of Color to late produce a pixel from it 
-            newColor = new Color(sumRed/wProduct, sumGreen/wProduct, sumBlue/wProduct);
-             
-            // set the pixel calculated to the co-ordinates of the window center across the image
-            filteredImage.setRGB(col2-sub, row2-sub, newColor.getRGB());
-            
-            // resets the sums to zero for the next sliding window
-            sumBlue = 0;
-            sumGreen = 0;
-            sumRed = 0;
-                
-            // I use this to determine when the window can move one unit down the image and thus increment the row and row2 to continue 
-            // processing the image. When the colomn chech value has not reached the edege of the width of the image the window contimue processing it 
-            // across. Else when the edge is reached the window goes down then across again and repeat the process until the bottom 
-            // edege of the image is reached 
-            if(col2>widt){
-                col = 0; col2 = winWidth;
-                row++; row2++;
-            }else{
-                col++; col2++;
-            }  
-        // When the cut off is not yet reached the program divide the tasks to smaller tasks to be processed. The divide and conqueror algorithm      
+    /** 
+     * half the window size
+     */ 
+    int halfWidth = winWidth/2;
+    
+         /**
+         * The class Constructor to initialize the attributes of the class
+         * @param width is the width of the window used to get the pixel components
+         * @param w is the actual width of the image being processed for filtering
+         * @param h is the actual height of the image to be processed
+         * @param hStart depics the the start of the image  height to be processed
+         * @param hEnd depics the end of the image height to be processed
+         * @param cut is the cut off value that determines the leght of the difference of the start and end length to be processed
+         * @param ori is the origial image 
+         * @param fil the image used to produce a filter from
+         */
+        public Mean(int width, int w, int h, int hStart, int hEnd, int cut, BufferedImage ori,BufferedImage fil){
+            winWidth = width;
+            heightStart = hStart;
+            heightEnd = hEnd;
+            widt = w;
+            originalImage = ori;
+            filteredImage = fil;
+            cutPoint = cut;
         }
-        }else{
-            int split = (heightStart+heightEnd)/2;
-            Mean left = new Mean(winWidth, widt, height, heightStart, split,cutPoint,originalImage,filteredImage);
-            Mean right = new Mean(winWidth, widt, height, split, heightEnd,cutPoint,originalImage,filteredImage);
-            left.fork();
-            right.compute();
-            left.join();
-        }   
-    }
+    
+        /**
+         * Compute method to run the tasks
+         */
+        protected void compute(){
+            
+            // Checks the cuff off value for the processing of the image to take place
+            if(heightEnd-heightStart<cutPoint){
+            
+            // Initialize the variable of type Color to null to be used to both extract and put colors from the original image to the image used to produce a filter
+            Color color = null;
+            Color newColor = null;
+    
+            // Get the number of pixels in a sliding-window
+            int wProduct = winWidth*winWidth;
+    
+            // Use this value to position the co-ordinates of the mean pixel to be set on the image to filtered
+            int sub = winWidth/2;
+            
+            // Initialize pixel and the sum of the component number colours to zero
+            int pixel1 = 0;
+            int sumRed = 0;
+            int sumGreen = 0;
+            int sumBlue = 0;
+    
+            // Declaring the sliding window start and end co-ordinates for all the corners of the sliding window
+            int row,col,row2,col2;
 
-    public void lastCompute(){
-        try{
-            ImageIO.write(filteredImage, "jpg", outputFile);}catch(IOException e){System.out.println("The image could not be generated!");}       
-    }
+            // THe start of the row of the image pixel to be processed at the given height and keep both the width and height of the window to the window size whenever it moves across the image
+            if(heightStart>winWidth){ // using this if statement to ensure all the pixels on the image are reachable
+                row = heightStart-winWidth;
+                col = 0;
+                row2 = heightStart;
+                col2 = winWidth;
+            }
+            else{
+                row = heightStart;
+                col = 0;
+                row2 = heightStart + winWidth;
+                col2 = winWidth;
+            }
+    
+            // The while loop set as a bench mark to loop across the height of the image until the variable row is equal or greater than the set end of the image height to be processed
+            while(row2<=heightEnd){
+    
+                // The two loops are used to slide the window on the image horizontal and vetically 
+                // And from each window add sum individual number of the pixel components in order to late compute the average of each of those components
+                for(int i=row;i<row2;i++){
+                    for(int j=col;j<col2;j++){
+                        pixel1 = originalImage.getRGB(j,i);                    
+                        color = new Color(pixel1);
+                        sumRed = sumRed + color.getRed();
+                        sumGreen = sumGreen + color.getGreen();
+                        sumBlue = sumBlue + color.getBlue();
+                    }
+                }
+                  
+                // Put the number representing those colours in the constructor of Color to late produce a pixel from it 
+                newColor = new Color(sumRed/wProduct, sumGreen/wProduct, sumBlue/wProduct);
+                 
+                // set the pixel calculated to the co-ordinates of the window center across the image
+                filteredImage.setRGB(col2-sub, row2-sub, newColor.getRGB());
+                
+                // resets the sums to zero for the next sliding window
+                sumBlue = 0;
+                sumGreen = 0;
+                sumRed = 0;
+                    
+                // I use this to determine when the window can move one unit down the image and thus increment the row and row2 to continue 
+                // processing the image. When the colomn chech value has not reached the edege of the width of the image the window contimue processing it 
+                // across. Else when the edge is reached the window goes down then across again and repeat the process until the bottom 
+                // edege of the image is reached 
+                if(col2>widt){
+                    col = 0; col2 = winWidth;
+                    row++; row2++;
+                }else{
+                    col++; col2++;
+                }  
+            // When the cut off is not yet reached the program divide the tasks to smaller tasks to be processed. The divide and conqueror algorithm      
+            }
+            }else{
+                int split = (heightStart+heightEnd)/2;
+                Mean left = new Mean(winWidth, widt, height, heightStart, split,cutPoint,originalImage,filteredImage);
+                Mean right = new Mean(winWidth, widt, height, split, heightEnd,cutPoint,originalImage,filteredImage);
+                left.fork();
+                right.compute();
+                left.join();
+            }   
+        }
+        /**
+         * Method to apply filter on the image when the fork/join framework is done
+         */
+        public void lastCompute(){
+            try{
+                ImageIO.write(filteredImage, "jpg", outputFile);}catch(IOException e){System.out.println("The image could not be generated!");}       
+        }
+    }  
 }
-    
-    
-
+   

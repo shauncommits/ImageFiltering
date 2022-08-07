@@ -19,18 +19,18 @@ public class MedianFilterSerial{
     // will be the same for all the instances of the class, meaning can be shared by all the instances of the class declared in
     static long startTime = 0; 
 
-    /**
-    * Method to start the timing of how low the system takes to do the median filter using serial programming
-    * it initializes the static variable startTime when called
-    */
+    
+    // Method to start the timing of how low the system takes to do the median filter using serial programming
+    // it initializes the static variable startTime when called
+    
     private static void tick(){
          startTime = System.currentTimeMillis();
     }
  
-    /**
-    * Method toc to return the time taken by the program to execute
-    * @return the time it takes the program using the available processors to apply the median filter on an image
-    */
+    
+    // Method toc to return the time taken by the program to execute
+    // return the time it takes the program using the available processors to apply the median filter on an image
+    
     private static float toc(){
          return (System.currentTimeMillis()-startTime)/1000.0f;
     }
@@ -190,7 +190,7 @@ public class MedianFilterSerial{
             // call the toc method to return the time taken to execute the program and store the value on the variable time
             float time = toc();
 
-            System.out.println("Median filter run time using serial programming in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1);
+            System.out.println("Median filter run time using serial programming in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1+ " using a "+windowWidth+"x"+windowWidth+" size");
                 
             }
             catch(IOException e){

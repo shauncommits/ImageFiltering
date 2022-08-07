@@ -14,7 +14,6 @@ import java.util.Collections;
  * @author Shaun Mbolompo 2022/08/06
  * 
  */
-
 public class MedianFilterParallel{ 
 
 
@@ -22,18 +21,18 @@ public class MedianFilterParallel{
  // will be the same for the instances of the class, meaning can be shared by all the instances of the class declared in
  static long startTime = 0; 
 
-/**
- * Method to start the timing of how low the system takes to do the median filter using parallelism and concurrency
- * it initializes the static variable startTime when called
- */
+
+ // Method to start the timing of how low the system takes to do the median filter using parallelism and concurrency
+ // it initializes the static variable startTime when called
+ 
 private static void tick(){
     startTime = System.currentTimeMillis();
 }
 
-/**
- * Method toc to return the time taken by the program to execute
- * @return the time it takes the program using the available processors to apply the median filter on an image
- */
+
+// Method toc to return the time taken by the program to execute
+// return the time it takes the program using the available processors to apply the median filter on an image
+ 
 private static float toc(){
     return (System.currentTimeMillis()-startTime)/1000.0f ;
 }
@@ -94,8 +93,9 @@ public static void main(String[] args) {
         // Get the number of processes used by the computer and store them on the variable cut
         int cut = height1/Runtime.getRuntime().availableProcessors()-1;
               
-        // Create an object of Median
-        Median obj = new Median(windowWidth, width1,height1, 0, height1, cut, originalImg, filteredImg);
+        // Create an object of the inner class Median
+        MedianFilterParallel ob = new MedianFilterParallel();
+        MedianFilterParallel.Median obj = ob.new Median(windowWidth, width1,height1, 0, height1, cut, originalImg, filteredImg);
     
         // Use the object to run the tasks throught the pool of threads
         pool.invoke(obj);
@@ -106,29 +106,66 @@ public static void main(String[] args) {
         // call the toc method to return the time taken to execute the program and store the value on the variable time
         float time = toc();
 
-        System.out.println("Median filter run time using fork/join framework in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1);
+        System.out.println("Median filter run time using fork/join framework in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1+ " using a "+windowWidth+"x"+windowWidth+" size");
         
     
     }else{
         System.out.println("The window width must be an odd, positive integer >=3."); // Alert the user of the window size accepted
     }
     }
-}
-    /**
-     * A RecursiveAction class to break tasks into smaller task and compute the tasks in parallel
-     */
-   class Median extends RecursiveAction{
+
+
+   /**
+    * A RecursiveAction class to break tasks into smaller task and compute the tasks in parallel
+    */
+   public class Median extends RecursiveAction{
     
-    // Attributes of the class
+
+    /**
+     * Image name and path to be used as output to transfer the filter of the original image too
+     */
     File outputFile = new File("image/output.jpg");
+    /**
+     * the width of the sliding window  
+     */ 
     int winWidth;
+
+    /**
+     * the start point on the image height
+     */
     int heightStart;
+    /**
+     * the ending point on the image height
+     */
     int heightEnd;
+
+    /** 
+     * the height of the image
+     */
     int height;
+
+    /**
+     *  the width of the image
+     */ 
     int widt;
+
+    /** 
+     * image to be flitered
+     */ 
     BufferedImage filteredImage;
+
+    /** 
+     * the original image
+     */
     BufferedImage originalImage;
+    /** 
+     * cut point for computation
+     */
     int cutPoint;
+
+    /** 
+     * half the window size
+     */ 
     int halfWidth = winWidth/2;
 
     /**
@@ -142,7 +179,7 @@ public static void main(String[] args) {
      * @param ori is the origial image 
      * @param fil the image used to produce a filter from
      */
-    Median(int width, int w, int h, int hStart, int hEnd, int cut, BufferedImage ori,BufferedImage fil){
+    public Median(int width, int w, int h, int hStart, int hEnd, int cut, BufferedImage ori,BufferedImage fil){
         winWidth = width;
         heightStart = hStart;
         heightEnd = hEnd;
@@ -172,19 +209,29 @@ public static void main(String[] args) {
         int midGreen = 0;
         int midBlue = 0;
 
+        // Declaring the sliding window start and end co-ordinates for all the corners of the sliding window
+        int row,col,row2,col2;
+
         // THe start of the row of the image pixel to be processed at the given height and keep both the width and height of the window to the window size whenever it moves across the image
-        int row = heightStart;
-        int col = 0;
-        int row2 = heightStart + winWidth;
-        int col2 = winWidth;
+        if(heightStart>winWidth){ // using this if statement to ensure all the pixels on the image are reachable
+            row = heightStart-winWidth;
+            col = 0;
+            row2 = heightStart;
+            col2 = winWidth;
+        }
+        else{
+            row = heightStart;
+            col = 0;
+            row2 = heightStart + winWidth;
+            col2 = winWidth;
+        }
 
         // Create the lists for all the number of the color components to be use to calculate the median color 
         List<Integer> arrRed = new ArrayList<>();
         List<Integer> arrGreen = new ArrayList<>();
         List<Integer> arrBlue = new ArrayList<>();
-
+    
         // The while loop set as a bench mark to loop across the height of the image until the variable row is equal or greater than the set end of the image height to be processed
-                
         while(row2<=heightEnd){
 
             // The two loops are used to slide the window on the image horizontal and vetically 
@@ -267,9 +314,12 @@ public static void main(String[] args) {
             left.join();
         }   
     }
-
+    /**
+     * Method to apply filter on the image when the fork/join framework is done
+     */
     public void lastCompute(){
         try{
             ImageIO.write(filteredImage, "jpg", outputFile);}catch(IOException e){System.out.println("The image could not be generated!");}       
     }
+}
 }
