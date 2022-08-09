@@ -1,7 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -24,7 +23,6 @@ public class MedianFilterParallel{
 
  // Method to start the timing of how low the system takes to do the median filter using parallelism and concurrency
  // it initializes the static variable startTime when called
- 
 private static void tick(){
     startTime = System.currentTimeMillis();
 }
@@ -32,7 +30,6 @@ private static void tick(){
 
 // Method toc to return the time taken by the program to execute
 // return the time it takes the program using the available processors to apply the median filter on an image
- 
 private static float toc(){
     return (System.currentTimeMillis()-startTime)/1000.0f ;
 }
@@ -53,7 +50,9 @@ public static void main(String[] args) {
     String inputImageName = "";
     String outputImageName = "";
 
-    int windowWidth = 0;// intialize the window size
+    // intialize the window size
+    int windowWidth = 0;
+
     try{
         // set the images variables and window size declared early on to the argument values
         inputImageName = args[0];
@@ -63,14 +62,11 @@ public static void main(String[] args) {
         
     }catch(IndexOutOfBoundsException e){ // An exception caught is gracefully by printing out on the console the sting below 
         System.out.println("Opps! Incorrect command line parameters");
-        System.out.println("Your command line parameters must be in this order:");
-        System.out.println("<inputImageName> <outputImageName> <windowWidth>");
+        System.out.println("Your command line parameters must be in this order: <inputImageName> <outputImageName> <windowWidth>");
     }
     
     // This statement ensures the window size entered on the console is either greater than 3 and is an odd number
     if(windowWidth>=3&&windowWidth%2!=0){
-
-    
 
         // Initialize the images through the Buffered class to null
         BufferedImage originalImg = null;
@@ -90,8 +86,11 @@ public static void main(String[] args) {
         int width1 = originalImg.getWidth()-windowWidth;
         int height1 = originalImg.getHeight();
 
-        // Get the number of processes used by the computer and store them on the variable cut
-        int cut = height1/Runtime.getRuntime().availableProcessors()-1;
+        // Get the number of processes used by the computer and subtract one
+        int pNum = Runtime.getRuntime().availableProcessors()-1;
+
+        // divide the height of the image by the number of processors minus one
+        int cut = height1/pNum;
               
         // Create an object of the inner class Median
         MedianFilterParallel ob = new MedianFilterParallel();
@@ -119,7 +118,6 @@ public static void main(String[] args) {
     * A RecursiveAction class to break tasks into smaller task and compute the tasks in parallel
     */
    public class Median extends RecursiveAction{
-    
 
     /**
      * Image name and path to be used as output to transfer the filter of the original image too
@@ -195,20 +193,16 @@ public static void main(String[] args) {
         
         // Checks the cuff off value for the processing of the image to take place
         if(heightEnd-heightStart<cutPoint){
-        
-        // Initialize the variable of type Color to null to be used to both extract and put colors from the original image to the image used to produce a filter
-        Color color = null;
-        Color newColor = null;
 
         // Use this value to position the co-ordinates of the mean pixel to be set on the image to filtered by subtracting this value after I getting
         // the bottom right corner co-ordinates of the sliding-window at a particular position
         int half = winWidth/2;
 
         // Initialize pixel and its colours to zero
-        int pixel1 = 0;
-        int midRed = 0;
-        int midGreen = 0;
-        int midBlue = 0;
+        int pixel = 0;
+
+        // position of the middle value
+        int mid = winWidth*winWidth/2;
 
         // Declaring the sliding window start and end co-ordinates for all the corners of the sliding window
         int row,col,row2,col2;
@@ -239,11 +233,10 @@ public static void main(String[] args) {
             // And from each window add the individual components of the image to an array list
             for(int i=row;i<row2;i++){
                 for(int j=col;j<col2;j++){
-                    pixel1 = originalImage.getRGB(j,i);                    
-                    color = new Color(pixel1);
-                    arrRed.add(color.getRed());
-                    arrGreen.add(color.getGreen());
-                    arrBlue.add(color.getBlue());
+                    pixel = originalImage.getRGB(j,i);                    
+                    arrRed.add((pixel>>16)&0xff);
+                    arrGreen.add((pixel>>8)&0xff);
+                    arrBlue.add(pixel&0xff);
                 }
             }
 
@@ -253,39 +246,11 @@ public static void main(String[] args) {
             Collections.sort(arrGreen);
             Collections.sort(arrBlue);
 
-            // Calculate the the median value position from the array list
-            int minR = arrRed.size()/2;
-            int minB = arrBlue.size()/2;
-            int minG = arrGreen.size()/2;
+             // set the pixel with the red, green and blue components that are median from the array list 
+             pixel = (arrRed.get(mid)<<16) | (arrGreen.get(mid)<<8) | arrBlue.get(mid);
 
-            // Checks to see if the the size of the array is even or not and then get the median value from the array
-            // for all the 3 colours
-            if(arrRed.size()%2!=0){
-                midRed = arrRed.get(minR);
-            }
-            else{
-                midRed = (arrRed.get(minR-1)+arrRed.get(minR))/2;
-            }
-
-            if(arrGreen.size()%2!=0){
-                midGreen = arrGreen.get(minG);
-            }
-            else{
-                midGreen = (arrGreen.get(minG-1)+arrGreen.get(minG))/2;
-            }
-
-            if(arrBlue.size()%2!=0){
-                midBlue = arrBlue.get(minB);
-            }
-            else{
-                midBlue = (arrBlue.get(minB-1)+arrBlue.get(minB))/2;
-            }
-                
-            // Put the colours in the constructor of Color to late produce a pixel from it
-            newColor = new Color(midRed, midGreen, midBlue);
-                
             // set the pixel calculated to the co-ordinates of the window center across the image
-            filteredImage.setRGB(col2-half, row2-half, newColor.getRGB());
+            filteredImage.setRGB(col2-half, row2-half, pixel);
 
             // Clears the array list to use it for the next loop
             arrRed.clear();

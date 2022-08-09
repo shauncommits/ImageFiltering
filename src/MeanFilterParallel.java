@@ -1,7 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -59,17 +58,14 @@ public class MeanFilterParallel{
        outputImageName = args[1];
        windowWidth = Integer.parseInt(args[2]);
 
-       
-   }catch(IndexOutOfBoundsException e){ // An exception caught is gracefully by printing out on the console the sting below 
-       System.out.println("Opps! Incorrect command line parameters");
-       System.out.println("Your command line parameters must be in this order:");
-       System.out.println("<inputImageName> <outputImageName> <windowWidth>");
+    // An exception caught is gracefully by printing out on the console the sting below   
+   }catch(IndexOutOfBoundsException e){ 
+    System.out.println("Opps! Incorrect command line parameters");
+    System.out.println("Your command line parameters must be in this order: <inputImageName> <outputImageName> <windowWidth>");
    }
    
    // This statement ensures the window size entered on the console is either greater than 3 and is an odd number
    if(windowWidth>=3&&windowWidth%2!=0){
-
-       Runtime run = Runtime.getRuntime();
 
        // Initialize the images through the Buffered class to null
        BufferedImage originalImg = null;
@@ -89,8 +85,11 @@ public class MeanFilterParallel{
        int width1 = originalImg.getWidth()-windowWidth;
        int height1 = originalImg.getHeight();
 
-       // Get the number of processes used by the computer and store them on the variable cut
-       int cut = height1/Runtime.getRuntime().availableProcessors()-1;
+      // Get the number of processes used by the computer and subtract one
+      int pNum = Runtime.getRuntime().availableProcessors()-1;
+
+      // divide the height of the image by the number of processors minus one
+      int cut = height1/pNum;
              
        
        // Create an object of the inner class Mean
@@ -193,10 +192,6 @@ public class MeanFilterParallel{
             
             // Checks the cuff off value for the processing of the image to take place
             if(heightEnd-heightStart<cutPoint){
-            
-            // Initialize the variable of type Color to null to be used to both extract and put colors from the original image to the image used to produce a filter
-            Color color = null;
-            Color newColor = null;
     
             // Get the number of pixels in a sliding-window
             int wProduct = winWidth*winWidth;
@@ -206,7 +201,9 @@ public class MeanFilterParallel{
             int half = winWidth/2;
             
             // Initialize pixel and the sum of the component number colours to zero
-            int pixel1 = 0;
+            int pixel = 0;
+
+            // intialize the sum of each component to zero
             int sumRed = 0;
             int sumGreen = 0;
             int sumBlue = 0;
@@ -235,19 +232,18 @@ public class MeanFilterParallel{
                 // And from each window add sum individual number of the pixel components in order to late compute the average of each of those components
                 for(int i=row;i<row2;i++){
                     for(int j=col;j<col2;j++){
-                        pixel1 = originalImage.getRGB(j,i);                    
-                        color = new Color(pixel1);
-                        sumRed = sumRed + color.getRed();
-                        sumGreen = sumGreen + color.getGreen();
-                        sumBlue = sumBlue + color.getBlue();
+                        pixel = originalImage.getRGB(j,i);                    
+                        sumRed = sumRed + ((pixel>>16) & 0xff);
+                        sumGreen = sumGreen + ((pixel>>8) & 0xff);
+                        sumBlue = sumBlue + (pixel & 0xff);
                     }
                 }
                   
-                // Put the number representing those colours in the constructor of Color to late produce a pixel from it 
-                newColor = new Color(sumRed/wProduct, sumGreen/wProduct, sumBlue/wProduct);
+                // set the pixel with the red, green and blue components that are median from the array list 
+                pixel = (sumRed/wProduct<<16) | (sumGreen/wProduct<<8) | sumBlue/wProduct;
                  
                 // set the pixel calculated to the co-ordinates of the window center across the image
-                filteredImage.setRGB(col2-half, row2-half, newColor.getRGB());
+                filteredImage.setRGB(col2-half, row2-half, pixel);
                 
                 // resets the sums to zero for the next sliding window
                 sumBlue = 0;

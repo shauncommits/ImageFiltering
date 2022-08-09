@@ -1,5 +1,4 @@
 import java.awt.image.BufferedImage;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -54,17 +53,12 @@ public class MeanFilterSerial{
             
         }catch(IndexOutOfBoundsException e){
             // An exception caught is gracefully by printing out on the console the sting below 
-            System.out.println("Opps! Incorrect command line, use the following format:");
-            System.out.println("run-<fileName> ARGS(<inputImageName> <outputImageName> <windowWidth>)");
-            e.printStackTrace();
+            System.out.println("Opps! Incorrect command line parameters");
+            System.out.println("Your command line parameters must be in this order: <inputImageName> <outputImageName> <windowWidth>");
         }
         // Initialize the images through the Buffered class to null
         BufferedImage originalImage = null;
         BufferedImage filteredImage = null;
-
-        // Initialize the variable of type Color to null to be used to both extract and put colors from the original image to the image used to produce a filter
-        Color color = null;
-        Color newColor = null;
 
         // Initializes the two files to store the paths of the image that is received from the terminal as an argument
         File file  = null;
@@ -92,7 +86,7 @@ public class MeanFilterSerial{
                 
                 
                 // Initialize pixel variable to zero
-                int pixel1 = 0;
+                int pixel = 0;
                 
                 // gets the total sum of the number of pixels a window has
                 int wProduct = windowWidth*windowWidth;
@@ -116,19 +110,18 @@ public class MeanFilterSerial{
                 // And from each window add the individual components of the image to an array list
                 for(int i=row;i<row2;i++){
                     for(int j=col;j<col2;j++){
-                        pixel1 = originalImage.getRGB(j,i);
-                        color = new Color(pixel1);
-                        sumRed = sumRed + color.getRed();
-                        sumGreen = sumGreen + color.getGreen();
-                        sumBlue = sumBlue + color.getBlue();
+                        pixel = originalImage.getRGB(j,i);
+                        sumRed = sumRed + ((pixel>>16) & 0xff);
+                        sumGreen = sumGreen + ((pixel>>8) & 0xff);
+                        sumBlue = sumBlue + (pixel & 0xff);
                     }
                 }
                 
-                // Put the number representing those colours in the constructor of Color to late produce a pixel from it 
-                newColor = new Color(sumRed/wProduct, sumGreen/wProduct, sumBlue/wProduct);
-                
+                // set the pixel with the red, green and blue components that are median from the array list 
+                pixel = (sumRed/wProduct<<16) | (sumGreen/wProduct<<8) | sumBlue/wProduct;
+                 
                 // set the pixel calculated to the co-ordinates of the window center across the image
-                filteredImage.setRGB(col2-half, row2-half, newColor.getRGB());
+                filteredImage.setRGB(col2-half, row2-half, pixel);
                 
                 // resets the sums to zero for the next sliding window
                 sumBlue = 0;
