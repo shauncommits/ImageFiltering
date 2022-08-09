@@ -87,13 +87,15 @@ public class MedianFilterSerial{
                 originalImage = ImageIO.read(file);
                 filteredImage = ImageIO.read(file2);
 
-                // Get the both the height and width of the image to be filtered
-                int width1 = originalImage.getWidth()-windowWidth;
-                int height1 = originalImage.getHeight()-windowWidth;
-                
-                // Use this value to position the co-ordinates of the median pixel to be set on the image to filtered
-                int sub = windowWidth/2;
+                // Use this value to position the co-ordinates of the mean pixel to be set on the image to filtered by subtracting this value after I getting
+                // the bottom right corner co-ordinates of the sliding-window at a particular position
+                // I also use this value on the height and the width so I may not get IndexOutOfBounds when I run the code because of going over the edge of the image 
+                int half = windowWidth/2;
 
+                // Get the both the height and width of the image to be filtered
+                int width1 = originalImage.getWidth()-half;
+                int height1 = originalImage.getHeight()-half;
+                
                 // Initialize pixel variable to zero
                 int pixel1 = 0;
                
@@ -165,7 +167,7 @@ public class MedianFilterSerial{
                 newColor = new Color(midRed, midGreen, midBlue);
                 
                 // Put the colours in the constructor of Color to late produce a pixel from it
-                filteredImage.setRGB(col2-sub, row2-sub, newColor.getRGB());
+                filteredImage.setRGB(col2-half, row2-half, newColor.getRGB());
                 
                 // Clears the array list to use it for the next loop
                 arrRed.clear();
@@ -190,7 +192,7 @@ public class MedianFilterSerial{
             // call the toc method to return the time taken to execute the program and store the value on the variable time
             float time = toc();
 
-            System.out.println("Median filter run time using serial programming in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1+ " using a "+windowWidth+"x"+windowWidth+" size");
+            System.out.println("Median filter run time using serial programming in seconds is: "+ time +" on an image with height "+height1+" and width of "+width1+ " using a "+windowWidth+"x"+windowWidth+" size. Using "+Runtime.getRuntime().availableProcessors()+" processors.");
                 
             }
             catch(IOException e){
