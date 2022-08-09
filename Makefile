@@ -26,5 +26,5 @@ run-MeanFilterSerial: $(CLASS_FILES)
 run-MeanFilterParallel: $(CLASS_FILES)
 	@java -cp bin MeanFilterParallel $(ARGS)
 
-generate-Java-Doc:
+javaDoc:
 	javadoc -d doc src/*.java
