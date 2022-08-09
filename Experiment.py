@@ -1,11 +1,11 @@
 import os
 import subprocess
 
-imageList = ["img1.jpg","img4.jpg","img5.jpg","img3.jpg","img6.jpg","img2.jpg"]
+imageList = ["img1.jpg","img4.jpg","img3.jpg","img5.jpg","img2.jpg"]
 
 def process(run,windowSize):
     for img in imageList:
-        for i in range(0,4):
+        for i in range(0,3):
             os.system("java -cp bin "+run+ " "+img+" "+img+" "+str(windowSize))
 
 
