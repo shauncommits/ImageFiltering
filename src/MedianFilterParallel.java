@@ -97,7 +97,7 @@ public static void main(String[] args) {
         MedianFilterParallel.Median obj = ob.new Median(windowWidth, width1,height1, 0, height1, cut, originalImg, filteredImg);
     
         // Use the object to run the tasks throught the pool of threads
-        pool.invoke(obj);
+        pool.commonPool().invoke(obj);
         
         // Once the threads are finish filtering the image the we call the method last compute to write the results to the image called output
         obj.lastCompute();
