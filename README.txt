@@ -21,5 +21,5 @@ Or alternatively use the makefile by typing: make javaDoc
 
 Hint: use Ubuntu or vs code editor to run the assignment. However, whichever way you prefer would suffice.
 
-To check the output of the filter, look at the image called output.jpg inside the image folder!
+To check the output of the filter, look at the image called output.jpg inside the imageOutput folder!
 
