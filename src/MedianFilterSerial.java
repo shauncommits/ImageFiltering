@@ -149,7 +149,7 @@ public class MedianFilterSerial{
                 }
             }
             // Creates the output image path with extension of jpg and writes the filtered image result to the new image created
-            File outputFile = new File("image/output.jpg");
+            File outputFile = new File("imageOutput/output.jpg");
             ImageIO.write(filteredImage, "jpg", outputFile);
 
             // call the toc method to return the time taken to execute the program and store the value on the variable time

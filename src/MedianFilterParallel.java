@@ -122,7 +122,7 @@ public static void main(String[] args) {
     /**
      * Image name and path to be used as output to transfer the filter of the original image too
      */
-    File outputFile = new File("image/output.jpg");
+    File outputFile = new File("imageOutput/output.jpg");
     /**
      * the width of the sliding window  
      */ 
