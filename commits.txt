@@ -1,0 +1,173 @@
+commit 4e1f79c5e9070b87d031126c280c47a94ef3b024
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 14 10:55:44 2022 +0200
+
+    Renamed the image file img6.jpg to img5.jpg
+
+commit d05560d93c8ecd6f319921d763f97793c9443fa1
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 14 10:54:38 2022 +0200
+
+    Added the report of the whole experiment
+
+commit b52fefbc9908ad5d5c1e12c0ba889c4bd3384156
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 14 10:53:32 2022 +0200
+
+    Added a folder to store the output image
+
+commit 772e3e6161038d9714b1ba5928db244af49a409b
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 14 10:51:19 2022 +0200
+
+    Edited the README.txt
+
+commit 5b1c3290cc226db32ec18b1de921451a97bbfd2c
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 14 10:50:24 2022 +0200
+
+    Added comments on the Experiment.py
+
+commit 8e53371c3dbfdc9d0ab9eac3665b43543bc5c454
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 14 10:49:39 2022 +0200
+
+    Edited the java source files
+
+commit b6ba4d7975f3c5ab15306a74bdc6c8ed3e2247eb
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Fri Aug 12 23:21:13 2022 +0200
+
+    Edited the java source files
+
+commit 0777c1d07d2e5da1991f69d629242249747aba58
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 22:35:18 2022 +0200
+
+    Edited the source files
+
+commit 74910ba6531081e347416e099467067ecd782785
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 22:34:44 2022 +0200
+
+    Deleted one image with almost the same size with another image
+
+commit dc5778b518984faa97ca64dfa2c9c322b77b12cc
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 22:33:44 2022 +0200
+
+    Edited the README.txt
+
+commit b99f2517d2e715d734085d7c0d5eae6cfcf63efd
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 22:32:52 2022 +0200
+
+    Edited the Experiment.py
+
+commit e5696fbf7596405a78b907da5b799afa4c3c3320
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 22:31:44 2022 +0200
+
+    Recompiled the java documentation of the source files
+
+commit cc50346523802e9efc8ec8bc3ae835d5d5095079
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 07:42:37 2022 +0200
+
+    Removed the bin folder from git that had the compiler classes becuase some java version have different compilers and did that to manage memory
+
+commit b4b188104966e28ab5cc63a1b762a0a8655c5814
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 07:32:57 2022 +0200
+
+    Added a README.txt
+
+commit 6a2c5b7e11b498facadbb4eedfab9c1994cf63e7
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 07:32:13 2022 +0200
+
+    Added the images I used for the experiment
+
+commit 874328457786d68e543003a566ff04252cc98227
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 07:31:01 2022 +0200
+
+    Edited the Makefile
+
+commit 571deb81d99f4520dc476e5c3dd413b4a54ece90
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 07:30:31 2022 +0200
+
+    Edited the Experiment.py
+
+commit 15410c8d1ace2f37d12ddab7a37b02a3151395da
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 07:29:10 2022 +0200
+
+    Ran the javadoc to capture latest changes
+
+commit 67590b2436db2b812317f887016c8253eb647f91
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 9 07:28:03 2022 +0200
+
+    Edited the comments in the java source files
+
+commit f47262deb7028d68c16ff17e23e9c38f6c4084cc
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 7 12:47:22 2022 +0200
+
+    Added the Experiment.py file to run the experiment on the java programs
+
+commit f4bcf3b82a6e5b080a675a79f35ad6895021c443
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sun Aug 7 12:45:31 2022 +0200
+
+    Edited the java source files
+
+commit a58035012f8db0d779597efd1ed46082699201ae
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sat Aug 6 18:46:53 2022 +0200
+
+    Edited the Makefile
+
+commit 25ebe2fde6f3de238a56f69c5c77e029150ddc1c
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sat Aug 6 18:45:45 2022 +0200
+
+    Added java documentaion for the source files in src folder and placed them inside the doc folder
+
+commit 16682d10d3dfa352cb30527ec302f7180cbf988e
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sat Aug 6 16:45:36 2022 +0200
+
+    Completed the programming for all the source files
+
+commit 5b432866ad85066c12d36f38c1accd798ee00444
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Sat Aug 6 02:11:21 2022 +0200
+
+    Edited the source files
+
+commit 04b3fb8742851370953f7a347cc3c9b19931c078
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Fri Aug 5 23:31:05 2022 +0200
+
+    Finished the code of mean filter using Fork/Join
+
+commit 98fb1e57094ea0081367654eee38979135a07371
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Thu Aug 4 07:03:00 2022 +0200
+
+    Finished the MeanFilterSerial.java
+
+commit 9df9cdf3c4779096e1aacf58ddd8ecf66e12ca9a
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Tue Aug 2 20:48:20 2022 +0200
+
+    Added an alogirithm of a matrix to find mean and median filter for an image
+
+commit af76038fc7689ca4f083776f7900679e656b0d6f
+Author: shauncommits <shaunmbolompo426@gmail.com>
+Date:   Mon Aug 1 20:19:13 2022 +0200
+
+    Parallel Programming with the Java Fork/Join framework
