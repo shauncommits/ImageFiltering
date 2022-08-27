@@ -4,7 +4,7 @@ java -cp bin <name of the program you wish to run> <image input with extension> 
 
 First: make clean
 
-Complete example: java -cp bin MeanFilterSerial.java img1.jpg img1.jpg 3
+Complete example: java -cp bin MeanFilterSerial img1.jpg img1.jpg 3
 
 Alternatively, you can use the MAKEFILE to run any program
 E.g. If you want to run MeanFilterSerial.java you can type instead: 
